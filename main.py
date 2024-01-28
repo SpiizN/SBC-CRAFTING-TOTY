@@ -15,7 +15,7 @@ def effectuer_clics(coordonnees, nb_sbc: int):
     pyautogui.hotkey('alt', 'tab') 
     time.sleep(1) 
 
-    for i in range(nb_sbc):
+    for i in range(int(nb_sbc)):
         pyautogui.click(930, 301)
         time.sleep(1.5)
 
