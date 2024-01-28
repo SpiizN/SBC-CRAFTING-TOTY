@@ -11,7 +11,7 @@ def lire_coordonnees_fichier(nom_fichier):
             coordonnees.append((x, y))
     return coordonnees
 
-def effectuer_clics(coordonnees, nb_sbc: int):
+def effectuer_clics(coordonnees, nb_sbc: int, vendable: bool):
     pyautogui.hotkey('alt', 'tab') 
     time.sleep(1) 
 
@@ -23,10 +23,13 @@ def effectuer_clics(coordonnees, nb_sbc: int):
             if (x,y) in [(975,709)]:
                 print(f"Nombre de SBC terminé : {i}")
                 time.sleep(2)
-            if (x,y) in [(987,633)]:
+            elif (x,y) in [(987,633)]:
                 time.sleep(2)
-            pyautogui.click(x, y)
-            random_delay() 
+            if vendable and (x, y) in [(1828,414)]:
+                pass
+            else:
+                pyautogui.click(x, y)
+                random_delay() 
 
 def random_delay():
     time.sleep(random.uniform(0.4, 1.2))
@@ -36,8 +39,21 @@ if __name__ == "__main__":
     coordonnees = lire_coordonnees_fichier(nom_fichier)
 
     if coordonnees:
+        value_error = True
+
         print(f"Coordonnées lues depuis {nom_fichier}: {coordonnees}")
         nb_sbc = input("Nombre de SBC à completer : ")
+        while value_error:
+            vendable = input("Voulez vous utiliser vos joueurs vendables ? (oui/non) --- ")
+            if vendable.lower() == "oui":
+                vendable = True
+                value_error = False
+            elif vendable.lower() == "non":
+                vendable = False
+                value_error = False
+            else:
+                value_error = True
+                print("[-] Répondez par 'oui' ou 'non'.")
 
         print("")
         print(r"----- A LIRE :  Conditions d'utilisation ------")
@@ -48,7 +64,7 @@ if __name__ == "__main__":
         time.sleep(5)
         input("Appuyez sur Enter pour commencer ...")
 
-        effectuer_clics(coordonnees, nb_sbc)
+        effectuer_clics(coordonnees, nb_sbc, vendable)
         print("Clics effectués avec succès.")
     else:
         print(f"Aucune coordonnée n'a été lue depuis {nom_fichier}.")
